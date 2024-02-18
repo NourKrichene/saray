@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 @CrossOrigin
@@ -22,7 +21,7 @@ public class TaskController {
 
     @GetMapping("/tasks")
     ResponseEntity<List<TaskDTO>> getTasks() {
-        return ResponseEntity.ok(taskService.getAllTasks().stream().map(TaskDTOMapper::toUser).collect(Collectors.toList()));
+        return ResponseEntity.ok(taskService.getAllTasks().stream().map(TaskDTOMapper::toUser).toList());
     }
 
     @PostMapping("/task")
@@ -33,8 +32,12 @@ public class TaskController {
     @DeleteMapping("/task/{id}")
     public ResponseEntity<TaskDTO> deleteTask(@PathVariable String id) {
         var task = taskService.getTaskById(id);
-        taskService.delete(id);
-        return ResponseEntity.ok(TaskDTOMapper.toUser(task));
+        if (task != null) {
+            taskService.delete(id);
+            return ResponseEntity.ok(TaskDTOMapper.toUser(task));
+        } else {
+            return ResponseEntity.ok(null);
+        }
     }
 
 

@@ -24,12 +24,14 @@ public class TaskProviderImp implements TaskProvider {
 
     @Override
     public List<Task> getAllTasks() {
-        return taskRepository.findAll().stream().map(TaskEntityMapper::toDomain).collect(Collectors.toList());
+        return taskRepository.findAll().stream().map(TaskEntityMapper::toDomain).toList();
     }
 
     @Override
     public Task getTaskById(String id) {
+        if(taskRepository.findById(id).isPresent())
         return TaskEntityMapper.toDomain(taskRepository.findById(id).get());
+        else return null;
     }
 
     @Override
