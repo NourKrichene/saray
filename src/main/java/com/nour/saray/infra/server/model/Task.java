@@ -1,5 +1,6 @@
-package com.nour.saray;
+package com.nour.saray.infra.server.model;
 
+import com.nour.saray.domain.model.Status;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,7 +15,6 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-
     private String name;
 
     private Status status;
@@ -26,7 +26,8 @@ public class Task {
     public Task() {
     }
 
-    public Task(Status status, String name, LocalDateTime creationDate, String description) {
+    public Task(String id,Status status, String name, LocalDateTime creationDate, String description) {
+       this.id=id;
         this.status = status;
         this.name = name;
         this.creationDate = creationDate;

@@ -1,4 +1,6 @@
-package com.nour.saray;
+package com.nour.saray.infra.server.repository;
+
+import com.nour.saray.infra.server.model.Task;
 
 import java.util.List;
 
