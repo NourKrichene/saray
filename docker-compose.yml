@@ -1,0 +1,27 @@
+version: "3.1"
+
+services:
+  mariadb:
+    image: mariadb
+    restart: always
+    ports:
+      - "3306:3306"
+    volumes:
+      - maria-db:/var/lib/mysql
+    environment:
+      MARIADB_ROOT_PASSWORD: rootpw
+      MARIADB_DATABASE: saray
+      MARIADB_USER: user
+      MARIADB_PASSWORD: userpw
+  
+  adminer:
+    image: adminer:latest
+    container_name: adminer
+    environment:
+      ADMINER_DEFAULT_SERVER: mariadb
+    restart: always
+    ports:
+      - 7777:8080
+
+volumes:
+  maria-db:
