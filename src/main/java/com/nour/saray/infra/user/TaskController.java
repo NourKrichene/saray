@@ -29,6 +29,11 @@ public class TaskController {
         return ResponseEntity.ok(TaskDTOMapper.toUser(taskService.create(TaskDTOMapper.toDomain(task))));
     }
 
+    @PatchMapping("/task")
+    public ResponseEntity<TaskDTO> editTask(@RequestBody TaskDTO task) {
+        return ResponseEntity.ok(TaskDTOMapper.toUser(taskService.update(TaskDTOMapper.toDomain(task))));
+    }
+
     @DeleteMapping("/task/{id}")
     public ResponseEntity<TaskDTO> deleteTask(@PathVariable String id) {
         var task = taskService.getTaskById(id);
