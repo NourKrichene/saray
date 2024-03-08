@@ -48,4 +48,8 @@ public class Task {
     public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
     }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 }

@@ -1,6 +1,7 @@
 package com.nour.saray.domain.ports.user;
 
 
+import com.nour.saray.domain.model.Status;
 import com.nour.saray.domain.model.Task;
 import com.nour.saray.domain.ports.server.TaskProvider;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,7 @@ public class TaskServiceImp implements TaskService {
     @Override
     public Task create(Task task) {
         task.setCreationDate(LocalDateTime.now());
+        task.setStatus(Status.NOT_DONE);
         return taskProvider.create(task);
     }
 
