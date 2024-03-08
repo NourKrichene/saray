@@ -44,4 +44,8 @@ public class Task {
     public String getDescription() {
         return description;
     }
+
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
 }

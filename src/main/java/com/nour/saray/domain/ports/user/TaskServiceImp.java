@@ -5,6 +5,7 @@ import com.nour.saray.domain.model.Task;
 import com.nour.saray.domain.ports.server.TaskProvider;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -29,6 +30,7 @@ public class TaskServiceImp implements TaskService {
 
     @Override
     public Task create(Task task) {
+        task.setCreationDate(LocalDateTime.now());
         return taskProvider.create(task);
     }
 

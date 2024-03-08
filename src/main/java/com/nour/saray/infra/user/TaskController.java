@@ -29,7 +29,7 @@ public class TaskController {
         return ResponseEntity.ok(TaskDTOMapper.toUser(taskService.create(TaskDTOMapper.toDomain(task))));
     }
 
-    @PatchMapping("/task")
+    @PutMapping("/task")
     public ResponseEntity<TaskDTO> editTask(@RequestBody TaskDTO task) {
         return ResponseEntity.ok(TaskDTOMapper.toUser(taskService.update(TaskDTOMapper.toDomain(task))));
     }

@@ -7,7 +7,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - maria-db:/var/lib/mysql
+      - C:/Users/Nour/OneDrive/Documents/projects/saray/persisted-data:/var/lib/mysql
     environment:
       MARIADB_ROOT_PASSWORD: rootpw
       MARIADB_DATABASE: saray
