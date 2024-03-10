@@ -13,7 +13,7 @@ services:
       MARIADB_DATABASE: saray
       MARIADB_USER: user
       MARIADB_PASSWORD: userpw
-  
+
   adminer:
     image: adminer:latest
     container_name: adminer
@@ -22,6 +22,22 @@ services:
     restart: always
     ports:
       - "7777:8080"
+
+  saray:
+    image: saray
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+
+  saray-ui:
+    image: saray-ui
+    build:
+      context: ./../saray-ui
+      dockerfile: Dockerfile
+    ports:
+      - "4200:4200"
 
 volumes:
   maria-db:

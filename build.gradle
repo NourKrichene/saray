@@ -25,3 +25,16 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+tasks.register('buildJar', Jar) {
+	from sourceSets.main.output
+	archiveFileName = "saray-0.0.1-SNAPSHOT.jar"
+}
+
+bootJar {
+	dependsOn buildJar
+	archiveFileName = "saray-0.0.1-SNAPSHOT.jar"
+	archiveBaseName = "saray-0.0.1-SNAPSHOT"
+	archiveVersion = ""
+}
+
