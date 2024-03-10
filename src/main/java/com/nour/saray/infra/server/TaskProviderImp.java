@@ -3,13 +3,11 @@ package com.nour.saray.infra.server;
 
 import com.nour.saray.domain.model.Task;
 import com.nour.saray.domain.ports.server.TaskProvider;
-
 import com.nour.saray.infra.server.mapper.TaskEntityMapper;
 import com.nour.saray.infra.server.repository.TaskRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Repository
@@ -29,9 +27,9 @@ public class TaskProviderImp implements TaskProvider {
 
     @Override
     public Task getTaskById(String id) {
-        if(taskRepository.findById(id).isPresent())
-        return TaskEntityMapper.toDomain(taskRepository.findById(id).get());
-        else return null;
+        if (taskRepository.findById(id).isPresent())
+            return TaskEntityMapper.toDomain(taskRepository.findById(id).get());
+        return null;
     }
 
     @Override
@@ -41,8 +39,16 @@ public class TaskProviderImp implements TaskProvider {
 
 
     @Override
-    public Task update(Task taskToEdit) {
-        return TaskEntityMapper.toDomain(taskRepository.save(TaskEntityMapper.toServer(taskToEdit)));
+    public Task update(String id, Task taskToEdit) {
+        if (taskRepository.findById(id).isPresent()) {
+            com.nour.saray.infra.server.model.Task task = taskRepository.findById(id).get();
+            task.setName(taskToEdit.getName());
+            task.setDescription(taskToEdit.getDescription());
+            task.setCreationDate(taskToEdit.getCreationDate());
+            task.setStatus(taskToEdit.getStatus());
+            return TaskEntityMapper.toDomain(taskRepository.save(task));
+        }
+        return null;
     }
 
     @Override

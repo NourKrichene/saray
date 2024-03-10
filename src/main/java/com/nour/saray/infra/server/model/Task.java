@@ -26,8 +26,8 @@ public class Task {
     public Task() {
     }
 
-    public Task(String id,Status status, String name, LocalDateTime creationDate, String description) {
-       this.id=id;
+    public Task(String id, Status status, String name, LocalDateTime creationDate, String description) {
+        this.id = id;
         this.status = status;
         this.name = name;
         this.creationDate = creationDate;

@@ -19,31 +19,26 @@ public class TaskController {
         this.taskService = taskService;
     }
 
+
+    @PostMapping("/tasks")
+    public ResponseEntity<TaskDTO> createTask(@RequestBody TaskDTO taskDTO) {
+        return ResponseEntity.ok(TaskDTOMapper.toUser(taskService.create(TaskDTOMapper.toDomain(taskDTO))));
+    }
+
     @GetMapping("/tasks")
-    ResponseEntity<List<TaskDTO>> getTasks() {
+    public ResponseEntity<List<TaskDTO>> getTasks() {
         return ResponseEntity.ok(taskService.getAllTasks().stream().map(TaskDTOMapper::toUser).toList());
     }
 
-    @PostMapping("/task")
-    public ResponseEntity<TaskDTO> addTask(@RequestBody TaskDTO task) {
-        return ResponseEntity.ok(TaskDTOMapper.toUser(taskService.create(TaskDTOMapper.toDomain(task))));
+    @PutMapping("/tasks/{id}")
+    public ResponseEntity<TaskDTO> updateTask(@PathVariable String id, @RequestBody TaskDTO taskDTO) {
+        return ResponseEntity.ok(TaskDTOMapper.toUser(taskService.update(id, TaskDTOMapper.toDomain(taskDTO))));
     }
 
-    @PutMapping("/task")
-    public ResponseEntity<TaskDTO> editTask(@RequestBody TaskDTO task) {
-        return ResponseEntity.ok(TaskDTOMapper.toUser(taskService.update(TaskDTOMapper.toDomain(task))));
+    @DeleteMapping("/tasks/{id}")
+    public ResponseEntity<Void> deleteTask(@PathVariable String id) {
+        taskService.delete(id);
+        return ResponseEntity.ok().build();
     }
-
-    @DeleteMapping("/task/{id}")
-    public ResponseEntity<TaskDTO> deleteTask(@PathVariable String id) {
-        var task = taskService.getTaskById(id);
-        if (task != null) {
-            taskService.delete(id);
-            return ResponseEntity.ok(TaskDTOMapper.toUser(task));
-        } else {
-            return ResponseEntity.ok(null);
-        }
-    }
-
 
 }

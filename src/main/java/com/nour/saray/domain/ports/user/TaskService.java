@@ -11,7 +11,7 @@ public interface TaskService {
 
     Task create(Task task);
 
-    Task update(Task task);
+    Task update(String id, Task task);
 
     String delete(String id);
 

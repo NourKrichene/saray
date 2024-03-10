@@ -37,13 +37,13 @@ public class TaskServiceImp implements TaskService {
     }
 
     @Override
-    public Task update(Task task) {
-        return taskProvider.update(task);
+    public Task update(String id, Task task) {
+        return taskProvider.update(id, task);
     }
 
     @Override
     public String delete(String id) {
-       return  taskProvider.delete(id);
+        return taskProvider.delete(id);
     }
 
 

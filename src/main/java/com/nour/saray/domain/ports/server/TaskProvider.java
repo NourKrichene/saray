@@ -11,9 +11,9 @@ public interface TaskProvider {
 
     Task getTaskById(final String id);
 
-  Task create(Task task);
+    Task create(Task task);
 
-    Task update(Task task);
+    Task update(String id, Task task);
 
-  String delete(String id);
+    String delete(String id);
 }
