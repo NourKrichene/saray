@@ -1,4 +1,4 @@
-version: "3.1"
+version: "3.8"
 
 services:
   mariadb:
@@ -9,10 +9,10 @@ services:
     volumes:
       - C:/Users/Nour/OneDrive/Documents/projects/saray/persisted-data:/var/lib/mysql
     environment:
-      MARIADB_ROOT_PASSWORD: rootpw
-      MARIADB_DATABASE: saray
-      MARIADB_USER: user
-      MARIADB_PASSWORD: userpw
+      MYSQL_ROOT_PASSWORD: rootpw
+      MYSQL_DATABASE: saray
+      MYSQL_USER: user
+      MYSQL_PASSWORD: userpw
 
   adminer:
     image: adminer:latest
@@ -30,6 +30,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8081:8081"
+    depends_on:
+      - mariadb
 
   saray-ui:
     image: saray-ui
@@ -38,6 +40,3 @@ services:
       dockerfile: Dockerfile
     ports:
       - "4200:4200"
-
-volumes:
-  maria-db:
