@@ -11,7 +11,7 @@ springdoc:
 
 spring:
   datasource:
-    url: jdbc:mariadb://mariadb:3306/saray
+    url: jdbc:mariadb://localhost:3306/saray
     password: rootpw
     username: root
     driver-class-name: org.mariadb.jdbc.Driver
