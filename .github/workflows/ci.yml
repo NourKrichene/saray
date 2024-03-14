@@ -31,5 +31,5 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Build and push
         run: |
-          docker build . -t saray/saray:latest
+          docker build . -t romero123/saray:latest
           docker push romero123/saray:latest
