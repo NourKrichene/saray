@@ -24,19 +24,13 @@ services:
       - "7777:8080"
 
   saray:
-    image: saray
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: romero123/saray:latest
     ports:
       - "8081:8081"
     depends_on:
       - mariadb
 
   saray-ui:
-    image: saray-ui
-    build:
-      context: ./../saray-ui
-      dockerfile: Dockerfile
+    image: romero123/saray-ui:latest
     ports:
       - "4200:4200"
