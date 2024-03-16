@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: saray-backend
+spec:
+  selector:
+    app: saray
+  ports:
+    - protocol: TCP
+      port: 8081
+  type: ClusterIP

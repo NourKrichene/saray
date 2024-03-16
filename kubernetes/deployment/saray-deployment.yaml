@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: saray
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: saray
+  template:
+    metadata:
+      labels:
+        app: saray
+    spec:
+      containers:
+        - name: saray
+          image: romero123/saray:latest
+          ports:
+            - containerPort: 8081
+          env:
+            - name: MYSQL_HOST
+              value: mariadb

@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: saray-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: saray-ui
+  template:
+    metadata:
+      labels:
+        app: saray-ui
+    spec:
+      containers:
+        - name: saray-ui
+          image: romero123/saray-ui:latest
+          ports:
+            - containerPort: 4200
