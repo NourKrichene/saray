@@ -17,16 +17,18 @@ public class TaskDTO {
 
     private String description;
 
+    private int priority;
 
     public TaskDTO() {
     }
 
-    public TaskDTO(String id,Status status, String name, LocalDateTime creationDate, String description) {
-       this.id=id;
+    public TaskDTO(String id,Status status, String name, LocalDateTime creationDate, String description, int priority) {
+        this.id = id;
         this.status = status;
         this.name = name;
         this.creationDate = creationDate;
         this.description = description;
+        this.priority = priority;
     }
 
     public String getId() {
@@ -48,4 +50,9 @@ public class TaskDTO {
     public String getDescription() {
         return description;
     }
+
+    public int getPriority() {
+        return priority;
+    }
+
 }

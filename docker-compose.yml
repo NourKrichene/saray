@@ -14,15 +14,6 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: userpw
 
-  adminer:
-    image: adminer:latest
-    container_name: adminer
-    environment:
-      ADMINER_DEFAULT_SERVER: mariadb
-    restart: always
-    ports:
-      - "7777:8080"
-
   saray:
     image: romero123/saray:latest
     ports:

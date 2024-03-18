@@ -12,14 +12,14 @@ public final class TaskEntityMapper {
         if (task == null) {
             return null;
         }
-        return new com.nour.saray.domain.model.Task(task.getId(), task.getStatus(),task.getName(), task.getCreationDate(), task.getDescription());
+        return new com.nour.saray.domain.model.Task(task.getId(), task.getStatus(),task.getName(), task.getCreationDate(), task.getDescription(), task.getPriority());
     }
 
     public static Task toServer(com.nour.saray.domain.model.Task task) {
         if (task == null) {
             return null;
         }
-        return new Task(task.getId(),task.getStatus(),task.getName(), task.getCreationDate(), task.getDescription());
+        return new Task(task.getId(),task.getStatus(),task.getName(), task.getCreationDate(), task.getDescription(), task.getPriority());
     }
 
 }

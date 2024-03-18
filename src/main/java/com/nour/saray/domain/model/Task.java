@@ -15,14 +15,17 @@ public class Task {
 
     private String description;
 
+    private int priority;
 
 
-    public Task(String id,Status status, String name, LocalDateTime creationDate, String description) {
-        this.id=id;
+
+    public Task(String id,Status status, String name, LocalDateTime creationDate, String description, int priority) {
+        this.id = id;
         this.status = status;
         this.name = name;
         this.creationDate = creationDate;
         this.description = description;
+        this.priority = priority;
     }
 
     public String getId() {
@@ -59,6 +62,14 @@ public class Task {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 
 }

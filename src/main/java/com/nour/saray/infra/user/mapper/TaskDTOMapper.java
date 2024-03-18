@@ -13,13 +13,13 @@ public final class TaskDTOMapper {
         if (taskDTO == null) {
             return null;
         }
-        return new Task(taskDTO.getId(),taskDTO.getStatus(), taskDTO.getName(), taskDTO.getCreationDate(), taskDTO.getDescription());
+        return new Task(taskDTO.getId(),taskDTO.getStatus(), taskDTO.getName(), taskDTO.getCreationDate(), taskDTO.getDescription(), taskDTO.getPriority());
     }
 
     public static TaskDTO toUser(final Task task) {
         if (task == null) {
             return null;
         }
-        return new TaskDTO(task.getId(),task.getStatus(), task.getName(), task.getCreationDate(), task.getDescription());
+        return new TaskDTO(task.getId(),task.getStatus(), task.getName(), task.getCreationDate(), task.getDescription(), task.getPriority());
     }
 }
