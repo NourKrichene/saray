@@ -19,7 +19,7 @@ public final class TaskEntityMapper {
         if (task == null) {
             return null;
         }
-        return new Task(task.getId(),task.getStatus(),task.getName(), task.getCreationDate(), task.getDescription(), task.getPriority());
+        return new Task(task.id(),task.status(),task.name(), task.creationDate(), task.description(), task.priority());
     }
 
 }

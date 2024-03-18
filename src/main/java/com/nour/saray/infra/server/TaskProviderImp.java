@@ -8,6 +8,7 @@ import com.nour.saray.infra.server.mapper.TaskEntityMapper;
 import com.nour.saray.infra.server.repository.TaskRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -35,13 +36,15 @@ public class TaskProviderImp implements TaskProvider {
 
     @Override
     public Task create(Task task) {
-        List<com.nour.saray.infra.server.model.Task> tasks = taskRepository.findAllByStatus(task.getStatus());
-        task.setPriority(0);
+        List<com.nour.saray.infra.server.model.Task> tasks = taskRepository.findAllByStatus(task.status());
         taskRepository.saveAll(tasks.stream().map(t -> {
             t.setPriority(t.getPriority() + 1);
             return t;
         }).toList());
-        return TaskEntityMapper.toDomain(taskRepository.save(TaskEntityMapper.toServer(task)));
+        com.nour.saray.infra.server.model.Task taskToAdd = TaskEntityMapper.toServer(task);
+        taskToAdd.setPriority(0);
+        taskToAdd.setStatus(Status.NOT_DONE);
+        return TaskEntityMapper.toDomain(taskRepository.save(taskToAdd));
     }
 
 
@@ -51,11 +54,11 @@ public class TaskProviderImp implements TaskProvider {
             com.nour.saray.infra.server.model.Task task = taskRepository.findById(id).get();
             int oldPriority = task.getPriority();
             Status oldStatus = task.getStatus();
-            task.setName(taskToEdit.getName());
-            task.setDescription(taskToEdit.getDescription());
-            task.setCreationDate(taskToEdit.getCreationDate());
-            task.setStatus(taskToEdit.getStatus());
-            task.setPriority(taskToEdit.getPriority());
+            task.setName(taskToEdit.name());
+            task.setDescription(taskToEdit.description());
+            task.setCreationDate(taskToEdit.creationDate());
+            task.setStatus(taskToEdit.status());
+            task.setPriority(taskToEdit.priority());
             if (oldPriority != task.getPriority() || oldStatus != task.getStatus()) {
                 if (oldStatus == task.getStatus())
                     shiftPriorityStatusUnchanged(task, oldPriority);

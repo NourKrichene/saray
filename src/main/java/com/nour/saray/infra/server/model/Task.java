@@ -1,14 +1,14 @@
 package com.nour.saray.infra.server.model;
 
 import com.nour.saray.domain.model.Status;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class Task {
 
     @Id
@@ -19,6 +19,7 @@ public class Task {
 
     private Status status;
 
+    @CreatedDate
     private LocalDateTime creationDate;
 
     private String description;
@@ -55,10 +56,6 @@ public class Task {
 
     public String getDescription() {
         return description;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public void setStatus(Status status) {
