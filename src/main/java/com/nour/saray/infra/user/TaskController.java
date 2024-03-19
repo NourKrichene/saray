@@ -3,10 +3,12 @@ package com.nour.saray.infra.user;
 import com.nour.saray.domain.ports.user.TaskService;
 import com.nour.saray.infra.user.mapper.TaskDTOMapper;
 import com.nour.saray.infra.user.model.TaskDTO;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/v1/tasks")
@@ -19,20 +21,24 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-
     @PostMapping()
     public ResponseEntity<TaskDTO> createTask(@RequestBody TaskDTO taskDTO) {
-        return ResponseEntity.ok(TaskDTOMapper.toUser(taskService.create(TaskDTOMapper.toDomain(taskDTO))));
+        TaskDTO createdTaskDTO = TaskDTOMapper.toUser(taskService.create(TaskDTOMapper.toDomain(taskDTO)));
+        return ResponseEntity.ok(createdTaskDTO);
     }
 
     @GetMapping()
     public ResponseEntity<List<TaskDTO>> getTasks() {
-        return ResponseEntity.ok(taskService.getAllTasks().stream().map(TaskDTOMapper::toUser).toList());
+        List<TaskDTO> taskDTOs = taskService.getAllTasks().stream()
+                .map(TaskDTOMapper::toUser)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(taskDTOs);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<TaskDTO> updateTask(@PathVariable String id, @RequestBody TaskDTO taskDTO) {
-        return ResponseEntity.ok(TaskDTOMapper.toUser(taskService.update(id, TaskDTOMapper.toDomain(taskDTO))));
+        TaskDTO updatedTaskDTO = TaskDTOMapper.toUser(taskService.update(id, TaskDTOMapper.toDomain(taskDTO)));
+        return ResponseEntity.ok(updatedTaskDTO);
     }
 
     @DeleteMapping("/{id}")
@@ -40,5 +46,4 @@ public class TaskController {
         taskService.delete(id);
         return ResponseEntity.ok().build();
     }
-
 }
