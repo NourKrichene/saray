@@ -27,3 +27,6 @@ spring:
   sql:
     init:
       mode: never
+
+logging:
+  config: classpath:logback-spring.xml
