@@ -3,12 +3,10 @@ package com.nour.saray.infra.user;
 import com.nour.saray.domain.ports.user.TaskService;
 import com.nour.saray.infra.user.mapper.TaskDTOMapper;
 import com.nour.saray.infra.user.model.TaskDTO;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/v1/tasks")
@@ -31,7 +29,7 @@ public class TaskController {
     public ResponseEntity<List<TaskDTO>> getTasks() {
         List<TaskDTO> taskDTOs = taskService.getAllTasks().stream()
                 .map(TaskDTOMapper::toUser)
-                .collect(Collectors.toList());
+                .toList();
         return ResponseEntity.ok(taskDTOs);
     }
 

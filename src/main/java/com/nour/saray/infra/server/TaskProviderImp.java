@@ -8,7 +8,6 @@ import com.nour.saray.infra.server.mapper.TaskEntityMapper;
 import com.nour.saray.infra.server.repository.TaskRepository;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -29,14 +28,15 @@ public class TaskProviderImp implements TaskProvider {
 
     @Override
     public Task getTaskById(String id) {
-        if (taskRepository.findById(id).isPresent())
-            return TaskEntityMapper.toDomain(taskRepository.findById(id).get());
+        var taskInRepository = taskRepository.findById(id);
+        if (taskInRepository.isPresent())
+            return TaskEntityMapper.toDomain(taskInRepository.get());
         return null;
     }
 
     @Override
     public Task create(Task task) {
-        List<com.nour.saray.infra.server.model.Task> tasks = taskRepository.findAllByStatus(task.status());
+        List<com.nour.saray.infra.server.model.Task> tasks = taskRepository.findAllByStatus(Status.NOT_DONE);
         taskRepository.saveAll(tasks.stream().map(t -> {
             t.setPriority(t.getPriority() + 1);
             return t;
@@ -50,8 +50,9 @@ public class TaskProviderImp implements TaskProvider {
 
     @Override
     public Task update(String id, Task taskToEdit) {
-        if (taskRepository.findById(id).isPresent()) {
-            com.nour.saray.infra.server.model.Task task = taskRepository.findById(id).get();
+        var taskInRepository = taskRepository.findById(id);
+        if (taskInRepository.isPresent()) {
+            com.nour.saray.infra.server.model.Task task = taskInRepository.get();
             int oldPriority = task.getPriority();
             Status oldStatus = task.getStatus();
             task.setName(taskToEdit.name());
@@ -71,7 +72,7 @@ public class TaskProviderImp implements TaskProvider {
         return null;
     }
 
-    private  void shiftPriorityStatusChanged(com.nour.saray.infra.server.model.Task task, int oldPriority, Status oldStatus) {
+    private void shiftPriorityStatusChanged(com.nour.saray.infra.server.model.Task task, int oldPriority, Status oldStatus) {
         List<com.nour.saray.infra.server.model.Task> tasks = taskRepository.findAllByStatus(oldStatus).stream().filter(t -> !t.getId().equals(task.getId())).toList();
         taskRepository.saveAll(tasks.stream().filter(t -> t.getPriority() > oldPriority).map(t -> {
             t.setPriority(t.getPriority() - 1);
