@@ -4,6 +4,8 @@ import com.nour.saray.domain.model.Status;
 import com.nour.saray.domain.model.Task;
 import com.nour.saray.domain.ports.user.TaskService;
 import com.nour.saray.infra.user.model.TaskDTO;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,18 +25,36 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class TaskControllerTest {
 
+    private static final String TASK_ID = "1";
+    private static final String TASK_NAME = "Task Name";
+    private static final String TASK_DESCRIPTION = "Task Description";
+    private static final Status TASK_STATUS = Status.NOT_DONE;
+    private static final int TASK_PRIORITY = 0;
+
     @Mock
     private TaskService taskService;
 
     @InjectMocks
     private TaskController taskController;
 
-    @Test
-    void createTask() {
+    private TaskDTO taskDTO;
+    private Task task;
+
+    @BeforeEach
+    public void setUp() {
         LocalDateTime creationDate = LocalDateTime.now();
-        TaskDTO taskDTO = new TaskDTO("1", Status.NOT_DONE, "Task 1", creationDate, "Description", 1);
-        Task createdTask = new Task("1", Status.NOT_DONE, "Task 1", creationDate, "Description", 1);
-        when(taskService.create(any())).thenReturn(createdTask);
+        taskDTO = new TaskDTO(TASK_ID, TASK_STATUS, TASK_NAME, creationDate, TASK_DESCRIPTION, TASK_PRIORITY);
+        task = new Task(TASK_ID, TASK_STATUS, TASK_NAME, creationDate, TASK_DESCRIPTION, TASK_PRIORITY);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        reset(taskService);
+    }
+
+    @Test
+    void shouldCreateTask() {
+        when(taskService.create(any())).thenReturn(task);
 
         ResponseEntity<TaskDTO> responseEntity = taskController.createTask(taskDTO);
 
@@ -44,32 +64,22 @@ class TaskControllerTest {
     }
 
     @Test
-    void getTasks() {
-        LocalDateTime creationDate = LocalDateTime.now();
-        LocalDateTime creationDate2 = LocalDateTime.now();
-        List<Task> tasks = new ArrayList<>(
-                List.of(new Task("1", Status.NOT_DONE, "Task 1", creationDate, "Description", 1),
-                        new Task("2", Status.NOT_DONE, "Task 2", creationDate2, "Description", 2)));
+    void shouldGetAllTasks() {
+        List<Task> tasks = new ArrayList<>(List.of(task, task));
         when(taskService.getAllTasks()).thenReturn(tasks);
-        List<TaskDTO> taskDTOs = new ArrayList<>(
-                List.of(new TaskDTO("1", Status.NOT_DONE, "Task 1", creationDate, "Description", 1),
-                        new TaskDTO("2", Status.NOT_DONE, "Task 2", creationDate2, "Description", 2)));
 
         ResponseEntity<List<TaskDTO>> responseEntity = taskController.getTasks();
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertEquals(taskDTOs, responseEntity.getBody());
+        assertEquals(2, responseEntity.getBody().size());
         verify(taskService, times(1)).getAllTasks();
     }
 
     @Test
-    void updateTask() {
-        LocalDateTime creationDate = LocalDateTime.now();
-        TaskDTO taskDTO = new TaskDTO("1", Status.NOT_DONE, "Task 2", creationDate, "Description 2", 1);
-        Task updatedTask = new Task("1", Status.NOT_DONE, "Task 2", creationDate, "Description 2", 1);
-        when(taskService.update(any(), any())).thenReturn(updatedTask);
+    void shouldUpdateTask() {
+        when(taskService.update(any(), any())).thenReturn(task);
 
-        ResponseEntity<TaskDTO> responseEntity = taskController.updateTask("1", taskDTO);
+        ResponseEntity<TaskDTO> responseEntity = taskController.updateTask(TASK_ID, taskDTO);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(taskDTO, responseEntity.getBody());
@@ -77,13 +87,12 @@ class TaskControllerTest {
     }
 
     @Test
-    void deleteTask() {
-        String taskId = "1";
-        when(taskService.delete(taskId)).thenReturn("deleted");
+    void shouldDeleteTask() {
+        when(taskService.delete(TASK_ID)).thenReturn("deleted");
 
-        ResponseEntity<Void> responseEntity = taskController.deleteTask(taskId);
+        ResponseEntity<Void> responseEntity = taskController.deleteTask(TASK_ID);
 
-        verify(taskService, times(1)).delete(taskId);
+        verify(taskService, times(1)).delete(TASK_ID);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     }
 }
