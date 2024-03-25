@@ -1,6 +1,5 @@
 package com.nour.saray.infra.server;
 
-
 import com.nour.saray.domain.model.Status;
 import com.nour.saray.domain.model.Task;
 import com.nour.saray.domain.ports.server.TaskProvider;
@@ -29,9 +28,7 @@ public class TaskProviderImp implements TaskProvider {
     @Override
     public Task getTaskById(String id) {
         var taskInRepository = taskRepository.findById(id);
-        if (taskInRepository.isPresent())
-            return TaskEntityMapper.toDomain(taskInRepository.get());
-        return null;
+        return taskInRepository.map(TaskEntityMapper::toDomain).orElse(null);
     }
 
     @Override

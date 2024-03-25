@@ -20,7 +20,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        run: ./gradlew assemble
+        run: ./gradlew build
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
