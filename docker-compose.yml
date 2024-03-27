@@ -1,18 +1,44 @@
-version: "3.8"
+version: "3.9"
+
+volumes:
+  mariadb_data:
+    driver: local
 
 services:
   mariadb:
     image: mariadb
+    environment:
+      MARIADB_ROOT_PASSWORD: rootpw
+      MARIADB_DATABASE: keycloak
+      MARIADB_USER: keycloak
+      MARIADB_PASSWORD: keycloak
+    container_name: mariadb
+    volumes:
+      - mariadb_data:/var/lib/mysql
     restart: always
     ports:
       - "3306:3306"
-    volumes:
-      - C:/Users/Nour/OneDrive/Documents/projects/saray/persisted-data:/var/lib/mysql
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0
     environment:
-      MYSQL_ROOT_PASSWORD: rootpw
-      MYSQL_DATABASE: saray
-      MYSQL_USER: user
-      MYSQL_PASSWORD: userpw
+      KC_DB: mariadb
+      KC_DB_SCHEMA: keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: keycloak
+      KC_DB_URL_HOST: mariadb
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_PROXY: edge
+      KC_HOSTNAME_STRICT: false
+    command: start
+    container_name: keycloak
+    volumes:
+      - ./keycloak/themes:/opt/keycloak/themes
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mariadb
 
   saray:
     image: romero123/saray:latest
