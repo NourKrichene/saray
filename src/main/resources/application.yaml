@@ -15,7 +15,17 @@ spring:
     password: rootpw
     username: root
     driver-class-name: org.mariadb.jdbc.Driver
-
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/saray
+          jwk-set-uri: http://localhost:8080/realms/saray/protocol/openid-connect/certs
+  jwt:
+    auth:
+      converter:
+        resource-id: saray-client
+        principal-attribute: principal_username
   jpa:
     defer-datasource-initialization: true
     properties:
