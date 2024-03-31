@@ -17,6 +17,7 @@ public class Task {
 
     private String name;
 
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     @CreatedDate
@@ -26,16 +27,21 @@ public class Task {
 
     private int priority;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
     public Task() {
     }
 
-    public Task(String id, Status status, String name, LocalDateTime creationDate, String description, int priority) {
+    public Task(String id, Status status, String name, LocalDateTime creationDate, String description, int priority, User user) {
         this.id = id;
         this.status = status;
         this.name = name;
         this.creationDate = creationDate;
         this.description = description;
         this.priority = priority;
+        this.user = user;
     }
 
     public String getId() {
@@ -80,6 +86,14 @@ public class Task {
 
     public void setPriority(int priority) {
         this.priority = priority;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
 }

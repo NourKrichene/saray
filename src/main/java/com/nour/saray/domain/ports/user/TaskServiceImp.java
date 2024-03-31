@@ -18,8 +18,8 @@ public class TaskServiceImp implements TaskService {
     }
 
     @Override
-    public List<Task> getAllTasks() {
-        return taskProvider.getAllTasks();
+    public List<Task> getTasksByUserId(String userId) {
+        return taskProvider.getTasksByUserId(userId);
     }
 
     @Override

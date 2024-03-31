@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface TaskProvider {
 
-    List<Task> getAllTasks();
+    List<Task> getTasksByUserId(final String userId);
 
     Task getTaskById(final String id);
 

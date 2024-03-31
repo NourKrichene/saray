@@ -4,6 +4,7 @@ import com.nour.saray.domain.ports.user.TaskService;
 import com.nour.saray.infra.user.mapper.TaskDTOMapper;
 import com.nour.saray.infra.user.model.TaskDTO;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,7 +14,9 @@ import java.util.List;
 @CrossOrigin
 public class TaskController {
 
+
     private final TaskService taskService;
+
 
     public TaskController(TaskService taskService) {
         this.taskService = taskService;
@@ -27,7 +30,8 @@ public class TaskController {
 
     @GetMapping()
     public ResponseEntity<List<TaskDTO>> getTasks() {
-        List<TaskDTO> taskDTOs = taskService.getAllTasks().stream()
+        List<TaskDTO> taskDTOs = taskService
+                .getTasksByUserId(SecurityContextHolder.getContext().getAuthentication().getName()).stream()
                 .map(TaskDTOMapper::toUser)
                 .toList();
         return ResponseEntity.ok(taskDTOs);

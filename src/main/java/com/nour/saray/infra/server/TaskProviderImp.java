@@ -4,7 +4,10 @@ import com.nour.saray.domain.model.Status;
 import com.nour.saray.domain.model.Task;
 import com.nour.saray.domain.ports.server.TaskProvider;
 import com.nour.saray.infra.server.mapper.TaskEntityMapper;
+import com.nour.saray.infra.server.model.User;
 import com.nour.saray.infra.server.repository.TaskRepository;
+import com.nour.saray.infra.server.repository.UserRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -14,15 +17,17 @@ import java.util.List;
 public class TaskProviderImp implements TaskProvider {
 
     private final TaskRepository taskRepository;
+    private final UserRepository userRepository;
 
 
-    public TaskProviderImp(TaskRepository taskRepository) {
+    public TaskProviderImp(TaskRepository taskRepository, UserRepository userRepository) {
         this.taskRepository = taskRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
-    public List<Task> getAllTasks() {
-        return taskRepository.findAllByOrderByPriority().stream().map(TaskEntityMapper::toDomain).toList();
+    public List<Task> getTasksByUserId(String userId) {
+        return taskRepository.findByUserIdOrderByPriority(userId).stream().map(TaskEntityMapper::toDomain).toList();
     }
 
     @Override
@@ -33,7 +38,8 @@ public class TaskProviderImp implements TaskProvider {
 
     @Override
     public Task create(Task task) {
-        List<com.nour.saray.infra.server.model.Task> tasks = taskRepository.findAllByStatus(Status.NOT_DONE);
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<com.nour.saray.infra.server.model.Task> tasks = taskRepository.findByUserIdAndStatus(userId, Status.NOT_DONE);
         taskRepository.saveAll(tasks.stream().map(t -> {
             t.setPriority(t.getPriority() + 1);
             return t;
@@ -41,6 +47,8 @@ public class TaskProviderImp implements TaskProvider {
         com.nour.saray.infra.server.model.Task taskToAdd = TaskEntityMapper.toServer(task);
         taskToAdd.setPriority(0);
         taskToAdd.setStatus(Status.NOT_DONE);
+        User user = userRepository.findById(userId).orElse(null);
+        taskToAdd.setUser(user);
         return TaskEntityMapper.toDomain(taskRepository.save(taskToAdd));
     }
 
@@ -70,12 +78,16 @@ public class TaskProviderImp implements TaskProvider {
     }
 
     private void shiftPriorityStatusChanged(com.nour.saray.infra.server.model.Task task, int oldPriority, Status oldStatus) {
-        List<com.nour.saray.infra.server.model.Task> tasks = taskRepository.findAllByStatus(oldStatus).stream().filter(t -> !t.getId().equals(task.getId())).toList();
+        List<com.nour.saray.infra.server.model.Task> tasks = taskRepository
+                .findByUserIdAndStatus(task.getUser().getId(), oldStatus)
+                .stream().filter(t -> !t.getId().equals(task.getId())).toList();
         taskRepository.saveAll(tasks.stream().filter(t -> t.getPriority() > oldPriority).map(t -> {
             t.setPriority(t.getPriority() - 1);
             return t;
         }).toList());
-        tasks = taskRepository.findAllByStatus(task.getStatus()).stream().filter(t -> !t.getId().equals(task.getId())).toList();
+        tasks = taskRepository
+                .findByUserIdAndStatus(task.getUser().getId(), oldStatus)
+                .stream().filter(t -> !t.getId().equals(task.getId())).toList();
         taskRepository.saveAll(tasks.stream().filter(t -> t.getPriority() >= task.getPriority()).map(t -> {
             t.setPriority(t.getPriority() + 1);
             return t;
@@ -84,7 +96,9 @@ public class TaskProviderImp implements TaskProvider {
     }
 
     private void shiftPriorityStatusUnchanged(com.nour.saray.infra.server.model.Task task, int oldPriority) {
-        List<com.nour.saray.infra.server.model.Task> tasks = taskRepository.findAllByStatus(task.getStatus()).stream().filter(t -> !t.getId().equals(task.getId())).toList();
+        List<com.nour.saray.infra.server.model.Task> tasks = taskRepository
+                .findByUserIdAndStatus(task.getUser().getId(), task.getStatus())
+                .stream().filter(t -> !t.getId().equals(task.getId())).toList();
         taskRepository.saveAll(tasks.stream().filter(t -> t.getPriority() != oldPriority).map(t -> {
             if (t.getPriority() >= task.getPriority() && t.getPriority() < oldPriority) {
                 t.setPriority(t.getPriority() + 1);
@@ -105,7 +119,8 @@ public class TaskProviderImp implements TaskProvider {
     }
 
     private void shiftPriorityAfterDelete(com.nour.saray.infra.server.model.Task task) {
-        List<com.nour.saray.infra.server.model.Task> tasks = taskRepository.findAllByStatus(task.getStatus());
+        List<com.nour.saray.infra.server.model.Task> tasks = taskRepository
+                .findByUserIdAndStatus(task.getUser().getId(), task.getStatus());
         taskRepository.saveAll(tasks.stream().filter(t -> t.getPriority() > task.getPriority()).map(t -> {
             t.setPriority(t.getPriority() - 1);
             return t;

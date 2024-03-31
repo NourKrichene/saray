@@ -16,6 +16,7 @@ import static org.mockito.Mockito.when;
 class TaskServiceImpTest {
 
     private static final String TASK_ID = "1";
+    private static final String USER_ID = "1";
     private static final String TASK_DESCRIPTION = "Description 1";
     private static final Status TASK_STATUS = Status.NOT_DONE;
 
@@ -29,15 +30,15 @@ class TaskServiceImpTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         taskServiceImp = new TaskServiceImp(taskProvider);
-        task = new Task(TASK_ID, TASK_STATUS, "Task 1", null, TASK_DESCRIPTION, 0);
+        task = new Task(TASK_ID, TASK_STATUS, "Task 1", null, TASK_DESCRIPTION, 0, null);
     }
 
     @Test
     void shouldReturnTasksFromProvider() {
         List<Task> tasks = List.of(task, task);
-        when(taskProvider.getAllTasks()).thenReturn(tasks);
+        when(taskProvider.getTasksByUserId(USER_ID)).thenReturn(tasks);
 
-        List<Task> result = taskServiceImp.getAllTasks();
+        List<Task> result = taskServiceImp.getTasksByUserId(USER_ID);
 
         assertEquals(tasks, result);
     }

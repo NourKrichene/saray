@@ -16,9 +16,9 @@ public interface TaskRepository extends org.springframework.data.repository.Crud
     Optional<Task> findById(String id);
 
 
-    List<Task> findAllByOrderByPriority();
+    List<Task> findByUserIdOrderByPriority(String userId);
 
 
-    List<Task> findAllByStatus (Status status);
+    List<Task> findByUserIdAndStatus(String userId,Status status);
 
 }

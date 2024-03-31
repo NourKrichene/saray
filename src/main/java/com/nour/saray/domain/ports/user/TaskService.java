@@ -5,7 +5,7 @@ import com.nour.saray.domain.model.Task;
 import java.util.List;
 
 public interface TaskService {
-    List<Task> getAllTasks();
+    List<Task> getTasksByUserId(final String userId);
 
     Task getTaskById(final String id);
 
